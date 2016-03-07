@@ -9,4 +9,4 @@ To run
 ---
 ./dmk-run-fstreamtest.sh baseball-in/ baseball-out/
 
-cp basebase.csv baseball-in/.
+cp tmp-data-split/x?? baseball-in/.
