@@ -23,6 +23,7 @@ import org.apache.spark.SparkConf
 import dmk.spark.streaming.util.LogLevelUtil
 
 /**
+ * @deprecated don't use Kafka receivers use Kafka Direct
  * Consumes messages from one or more topics in Kafka and does wordcount.
  * Usage: KafkaWordCount <zkQuorum> <group> <topics> <numThreads>
  *   <zkQuorum> is a list of one or more zookeeper servers that make quorum
@@ -35,6 +36,7 @@ import dmk.spark.streaming.util.LogLevelUtil
  *      org.apache.spark.examples.streaming.KafkaWordCount zoo01,zoo02,zoo03 \
  *      my-consumer-group topic1,topic2 1`
  */
+@Deprecated
 object KafkaWordCount {
   def main(args: Array[String]) {
     if (args.length < 4) {
