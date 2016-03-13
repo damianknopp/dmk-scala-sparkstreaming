@@ -3,13 +3,14 @@ package dmk.spark.streaming
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql.types.StructType
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.functions._
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.dstream.DStream
 import dmk.spark.streaming.util.LogLevelUtil
-import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.types.StructField
-import org.apache.spark.sql.types.StringType
 import dmk.spark.streaming.util.SparkConfUtil
 import dmk.spark.streaming.model.BaseballSummaryRecord
 
@@ -45,12 +46,20 @@ object BaseballTotals {
 
     // Using Datasets
     val bbDs = summariesDf.as[BaseballSummaryRecord]
-//    val projectDs = bbDs.map( r => (r.teamId, r.numRows))
+//    val projectDs = bbDs.map( r => (r.teamId, r.numRows)) 
+    // number of distinct parquet keys
+//     bbDs.map(_.key).distinct.collect
     // number of distinct teamId across all parquet keys
 //   bbDs.select(expr("teamId").as[String]).distinct.count 
+     
+//  Using Dataframes option 1
+    // sum numRows by teamIds, across all parquet keys
+    //  sort and display results
+    bbDs.toDF.groupBy($"teamId").agg(sum("numRows") as "totalRows")
+                  .orderBy($"totalRows" desc).show(100)
     
-    // Using Dataframes
-    // sum numRows of like teamIds, across all parquet keys
+//     Using Dataframes option 2
+    // sum numRows by teamIds, across all parquet keys
     //     sort and display results
     summariesDf.map(r => (r(0).toString, r(1).asInstanceOf[Long]))
                       .reduceByKey(_ + _).sortBy(_._2).toDF.show(100)
