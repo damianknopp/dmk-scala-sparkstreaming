@@ -10,4 +10,4 @@ for lib in $(ls ./lib); do
 	SPARK_CP="./lib/$lib,$SPARK_CP"
 done;
 
-${SPARK_HOME}/bin/spark-submit --master local[*] --class dmk.spark.streaming.FilesystemStream --jars $SPARK_CP $JAR $@
+${SPARK_HOME}/bin/spark-submit --master local[*] --class dmk.spark.streaming.BaseballTotals --jars $SPARK_CP $JAR $@

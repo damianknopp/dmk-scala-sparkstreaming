@@ -43,10 +43,6 @@ object NetworkWordCount {
     }
 
     LogLevelUtil.reduceLogLevels()
-    // spark 1.4 and before, spark 1.5 is dynamic if spark.streaming.backpressure.enabled=true
-    // backpressure is good with kafka, but will fill up tcp connection cache
-    // backpressure uses proportional intergal derivative pid
-    //spark.streaming.receiver.maxRate max number of messages received per second
     
     // Create the context with a 5 second batch size
     val sparkConf = new SparkConf().setAppName("NetworkWordCount")
