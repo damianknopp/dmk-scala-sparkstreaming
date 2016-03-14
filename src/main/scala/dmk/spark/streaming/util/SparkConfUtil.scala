@@ -45,5 +45,11 @@ object SparkConfUtil {
     conf.set("spark.streaming.receiver.writeAheadLog.enable", "true")
     conf
   }
+  
+  def setKafkaRate(conf: SparkConf): SparkConf = {
+    val maxMsgPerSec = 100000 * 9
+    conf.set("spark.streaming.kafak.maxRatePerPartition", maxMsgPerSec.toString)
+    conf
+  }
 
 }

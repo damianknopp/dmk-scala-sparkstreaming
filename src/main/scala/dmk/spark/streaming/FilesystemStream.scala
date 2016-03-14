@@ -2,15 +2,17 @@ package dmk.spark.streaming
 
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
-import org.apache.spark.sql.SQLContext
 import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql.types.StringType
+import org.apache.spark.sql.types.StructField
+import org.apache.spark.sql.types.StructType
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.dstream.DStream
+import dmk.spark.streaming.model.BaseballRecord
 import dmk.spark.streaming.util.LogLevelUtil
 import dmk.spark.streaming.util.SparkConfUtil
-import org.apache.spark.sql.types.StructType
-import org.apache.spark.sql.types.StructField
-import org.apache.spark.sql.types.StringType
+import dmk.spark.streaming.util.SQLContextSingleton
 
 /**
  * http://localhost:4040/SQL/
@@ -46,7 +48,7 @@ object FilesystemStream {
 
       val rowsDf = rdd.map(line => {
         val arr = line.split(",")
-        Record(arr(0), arr(1), arr(2), arr(3))
+        BaseballRecord(arr(0), arr(1), arr(2), arr(3))
       }).toDF()
       rowsDf.registerTempTable("baseball")
       val rowCountsDf =
@@ -84,20 +86,5 @@ object FilesystemStream {
           StructField("teamId", StringType, false) ::
           StructField("rank", StringType, true) :: Nil)
     struct
-  }
-}
-
-case class Record(id: String, yearId: String, teamId: String, rank: String)
-
-/** Lazily instantiated singleton instance of SQLContext */
-object SQLContextSingleton {
-
-  @transient private var instance: SQLContext = _
-
-  def getInstance(sparkContext: SparkContext): SQLContext = {
-    if (instance == null) {
-      instance = new SQLContext(sparkContext)
-    }
-    instance
   }
 }
