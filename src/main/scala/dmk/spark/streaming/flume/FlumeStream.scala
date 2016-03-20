@@ -34,7 +34,7 @@ object FlumeStream {
     SparkConfUtil.setBackPressure(sparkConf)
     SparkConfUtil.setWAL(sparkConf)
 
-    val windowDuration = Milliseconds(2000 * 2)
+    val windowDuration = Milliseconds(1000 * 60)
     val slideDuration = windowDuration
     val ssc = new StreamingContext(sparkConf, windowDuration)
     ssc.checkpoint("checkpoint")
@@ -54,7 +54,6 @@ object FlumeStream {
       rdd.foreachPartition { x => 
         println(x)
         x.foreach { e => 
-          println(e)
           val msg = new String(e.event.getBody.array())
           println(msg)  
         }
