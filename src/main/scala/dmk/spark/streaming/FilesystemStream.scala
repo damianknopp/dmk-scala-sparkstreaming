@@ -34,7 +34,7 @@ object FilesystemStream {
     SparkConfUtil.setWAL(sparkConf)
 
     val windowDuration = Milliseconds(2000 * 2)
-    val slideDuration = windowDuration
+//    val slideDuration = windowDuration
     val ssc = new StreamingContext(sparkConf, windowDuration)
     ssc.checkpoint("checkpoint")
     val indir = args(0)
